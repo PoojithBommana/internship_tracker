@@ -1,15 +1,15 @@
 {
-<<<<<<< HEAD
-  "name": "nodebackend",
+  "name": "internship-tracker-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API for Internship Application Tracker",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "dev": "nodemon index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["internship", "tracker", "api", "backend"],
+  "author": "Poojith Bommana",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -20,52 +20,5 @@
     "mongoose": "^8.19.2",
     "nodemon": "^3.1.10",
     "validator": "^13.11.0"
-=======
-  "name": "internship-application-tracker",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.12.2",
-    "js-cookie": "^3.0.5",
-    "lucide-react": "^0.546.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-router-dom": "^6.30.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.18"
->>>>>>> 76828a23ddf0b381cd4ab846ecab2bc5513701c4
   }
 }
