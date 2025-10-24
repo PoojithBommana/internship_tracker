@@ -82,7 +82,7 @@ const ViewApplications = () => {
         }
 
         console.log("Calling searchApplications API with params:", searchParams)
-        response = await apiClient.searchApplications(searchParams)
+        response = await apiClient.searchApplicationsByKeywords(searchParams)
         console.log("searchApplications API response:", response)
       }
       // Use filterApplications API if any filters are applied
@@ -103,7 +103,7 @@ const ViewApplications = () => {
         }
 
         console.log("Calling filterApplications API with params:", filterParams)
-        response = await apiClient.filterApplications(filterParams)
+        response = await apiClient.filterApplicationsByCriteria(filterParams)
         console.log("filterApplications API response:", response)
       } else {
         // Use sortApplications API for sorting and pagination
@@ -115,7 +115,7 @@ const ViewApplications = () => {
         }
 
         console.log("Calling sortApplications API with params:", sortParams)
-        response = await apiClient.sortApplications(sortParams)
+        response = await apiClient.sortApplicationsByField(sortParams)
         console.log("sortApplications API response:", response)
       }
 
@@ -139,7 +139,7 @@ const ViewApplications = () => {
   const handleViewJob = async (applicationId: string) => {
     try {
       console.log("Calling getApplicationById API for ID:", applicationId)
-      const response = await apiClient.getApplicationById(applicationId)
+      const response = await apiClient.fetchApplicationById(applicationId)
       console.log("getApplicationById API response:", response)
 
       if (response.success) {
@@ -186,7 +186,7 @@ const ViewApplications = () => {
       console.log("Calling updateApplication API for ID:", editingApplication._id)
       console.log("Update data:", editFormData)
 
-      const response = await apiClient.updateApplication(editingApplication._id, editFormData)
+      const response = await apiClient.updateExistingApplication(editingApplication._id, editFormData)
       console.log("updateApplication API response:", response)
 
       if (response.success) {
@@ -214,7 +214,7 @@ const ViewApplications = () => {
     try {
       console.log("Calling deleteApplication API for ID:", deletingApplication._id)
 
-      const response = await apiClient.deleteApplication(deletingApplication._id)
+      const response = await apiClient.removeApplication(deletingApplication._id)
       console.log("deleteApplication API response:", response)
 
       if (response.success) {

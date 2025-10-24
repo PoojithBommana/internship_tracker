@@ -136,73 +136,91 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/20 rounded-full blur-2xl animate-pulse delay-500"></div>
+      </div>
+      
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
 
       {/* Main Card */}
-      <div className="relative z-10 w-full max-w-5xl grid md:grid-cols-2 bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-white/20">
+      <div className="relative z-10 w-full max-w-6xl grid md:grid-cols-2 bg-white/5 backdrop-blur-2xl rounded-3xl shadow-2xl overflow-hidden border border-white/10">
         
         {/* Left Panel - Branding */}
-        <div className={`hidden md:flex flex-col justify-between p-12 text-white bg-gradient-to-br from-purple-600 to-indigo-700 ${!isLogin ? 'order-last' : ''}`}>
-          <div>
+        <div className={`hidden md:flex flex-col justify-between p-12 text-white bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 ${!isLogin ? 'order-last' : ''} relative overflow-hidden`}>
+          {/* Decorative Elements */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+          
+          <div className="relative z-10">
             <div className="flex items-center gap-3 mb-8">
-              <Briefcase className="w-10 h-10" />
-              <h1 className="text-3xl font-bold">InternTrack</h1>
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                <Briefcase className="w-7 h-7" />
+              </div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">InternTrack</h1>
             </div>
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-5xl font-bold mb-6 leading-tight">
               {isLogin ? 'Welcome Back!' : 'Start Your Journey'}
             </h2>
-            <p className="text-lg text-purple-100 mb-8">
+            <p className="text-xl text-white/90 mb-10 leading-relaxed">
               {isLogin 
                 ? 'Track every internship application in one place. Stay organized, stay ahead.'
                 : 'Join thousands of students landing dream internships with smart tracking.'
               }
             </p>
             
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                  <Building className="w-5 h-5" />
+            <div className="space-y-6">
+              <div className="flex items-center gap-4 p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
+                <div className="w-12 h-12 bg-gradient-to-br from-white/30 to-white/10 rounded-xl flex items-center justify-center">
+                  <Building className="w-6 h-6" />
                 </div>
-                <span>Track 100+ applications</span>
+                <div>
+                  <div className="font-semibold text-lg">Track 100+ applications</div>
+                  <div className="text-white/80 text-sm">Never lose track of your progress</div>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                  <Calendar className="w-5 h-5" />
+              <div className="flex items-center gap-4 p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
+                <div className="w-12 h-12 bg-gradient-to-br from-white/30 to-white/10 rounded-xl flex items-center justify-center">
+                  <Calendar className="w-6 h-6" />
                 </div>
-                <span>Never miss a deadline</span>
+                <div>
+                  <div className="font-semibold text-lg">Never miss a deadline</div>
+                  <div className="text-white/80 text-sm">Smart reminders and notifications</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="text-sm text-purple-200">
+          <div className="relative z-10 text-sm text-white/70">
             <p>© 2025 InternTrack. Made for ambitious interns.</p>
           </div>
         </div>
 
         {/* Right Panel - Form */}
-        <div className="p-8 md:p-12 flex flex-col justify-center">
+        <div className="p-8 md:p-12 flex flex-col justify-center bg-white/5 backdrop-blur-sm">
           <div className="max-w-md mx-auto w-full">
             {/* Toggle */}
-            <div className="flex mb-8 bg-gray-100 p-1 rounded-xl">
+            <div className="flex mb-8 bg-white/10 backdrop-blur-sm p-1 rounded-2xl border border-white/20">
               <button
                 onClick={() => handleToggle(true)}
-                className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+                className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-300 ${
                   isLogin 
-                    ? 'bg-white text-purple-700 shadow-md' 
-                    : 'text-gray-600 hover:text-purple-700'
+                    ? 'bg-white text-purple-700 shadow-lg transform scale-105' 
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
                 Login
               </button>
               <button
                 onClick={() => handleToggle(false)}
-                className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+                className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-300 ${
                   !isLogin 
-                    ? 'bg-white text-purple-700 shadow-md' 
-                    : 'text-gray-600 hover:text-purple-700'
+                    ? 'bg-white text-purple-700 shadow-lg transform scale-105' 
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
                 Sign Up
@@ -210,28 +228,34 @@ const AuthPage = () => {
             </div>
 
             {/* Form Title */}
-            <h3 className="text-2xl font-bold text-white mb-6">
-              {isLogin ? 'Login to Your Account' : 'Create Your Account'}
+            <h3 className="text-3xl font-bold text-white mb-8 text-center">
+              {isLogin ? 'Welcome Back!' : 'Create Account'}
             </h3>
 
             {/* Error/Success Messages */}
             {error && (
-              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
-                {error}
+              <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-2xl text-red-100 text-sm backdrop-blur-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                  {error}
+                </div>
               </div>
             )}
             {success && (
-              <div className="mb-4 p-3 bg-green-500/20 border border-green-500/50 rounded-lg text-green-200 text-sm">
-                {success}
+              <div className="mb-6 p-4 bg-green-500/20 border border-green-500/50 rounded-2xl text-green-100 text-sm backdrop-blur-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  {success}
+                </div>
               </div>
             )}
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name field for signup */}
               {!isLogin && (
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+                <div className="space-y-2">
+                  <label htmlFor="name" className="block text-sm font-semibold text-white/90 mb-3">
                     Full Name
                   </label>
                   <input
@@ -240,7 +264,7 @@ const AuthPage = () => {
                     name="name"
                     value={signupForm.name}
                     onChange={handleSignupChange}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    className="w-full px-5 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 hover:bg-white/15"
                     placeholder="Enter your full name"
                     disabled={isLoading}
                   />
@@ -248,8 +272,8 @@ const AuthPage = () => {
               )}
 
               {/* Email field */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-sm font-semibold text-white/90 mb-3">
                   Email Address
                 </label>
                 <input
@@ -258,15 +282,15 @@ const AuthPage = () => {
                   name="email"
                   value={isLogin ? loginForm.email : signupForm.email}
                   onChange={isLogin ? handleLoginChange : handleSignupChange}
-                  className="w-full px-4 py-3 bg-white/10 backdrop-blur border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  className="w-full px-5 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 hover:bg-white/15"
                   placeholder="Enter your email"
                   disabled={isLoading}
                 />
               </div>
 
               {/* Password field */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="space-y-2">
+                <label htmlFor="password" className="block text-sm font-semibold text-white/90 mb-3">
                   Password
                 </label>
                 <div className="relative">
@@ -276,14 +300,14 @@ const AuthPage = () => {
                     name="password"
                     value={isLogin ? loginForm.password : signupForm.password}
                     onChange={isLogin ? handleLoginChange : handleSignupChange}
-                    className="w-full px-4 py-3 pr-12 bg-white/10 backdrop-blur border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    className="w-full px-5 py-4 pr-14 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 hover:bg-white/15"
                     placeholder="Enter your password"
                     disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors duration-200"
                     disabled={isLoading}
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -295,40 +319,45 @@ const AuthPage = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-700 hover:via-indigo-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl"
               >
                 {isLoading ? (
-                  <div className="flex items-center justify-center gap-2">
+                  <div className="flex items-center justify-center gap-3">
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    {isLogin ? 'Signing in...' : 'Creating account...'}
+                    <span>{isLogin ? 'Signing in...' : 'Creating account...'}</span>
                   </div>
                 ) : (
-                  isLogin ? 'Sign In' : 'Create Account'
+                  <span className="text-lg">{isLogin ? 'Sign In' : 'Create Account'}</span>
                 )}
               </button>
             </form>
 
             {/* Social Login */}
-            <div className="mt-8">
-              <p className="text-center text-sm text-gray-400 mb-4">
-                Or continue with
-              </p>
-              <div className="flex gap-3 justify-center">
-                <button className="p-3 bg-white/10 backdrop-blur rounded-xl hover:bg-white/20 transition-all">
-                  <img src="/api/placeholder/24/24" alt="Google" className="w-6 h-6" />
+            <div className="mt-10">
+              <div className="relative mb-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-white/20"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-transparent text-white/60">Or continue with</span>
+                </div>
+              </div>
+              <div className="flex gap-4 justify-center">
+                <button className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/30">
+                  <div className="w-6 h-6 bg-gradient-to-br from-red-400 to-red-600 rounded"></div>
                 </button>
-                <button className="p-3 bg-white/10 backdrop-blur rounded-xl hover:bg-white/20 transition-all">
-                  <img src="/api/placeholder/24/24" alt="LinkedIn" className="w-6 h-6" />
+                <button className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/30">
+                  <div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-blue-600 rounded"></div>
                 </button>
               </div>
             </div>
 
             {/* Mobile Toggle Text */}
-            <p className="mt-8 text-center text-sm text-gray-400 md:hidden">
+            <p className="mt-8 text-center text-sm text-white/70 md:hidden">
               {isLogin ? "Don't have an account? " : "Already have an account? "}
               <button
                 onClick={() => handleToggle(!isLogin)}
-                className="text-purple-400 hover:text-purple-300 font-medium underline"
+                className="text-purple-300 hover:text-purple-200 font-semibold underline transition-colors duration-200"
               >
                 {isLogin ? 'Sign up' : 'Login'}
               </button>

@@ -1,3 +1,5 @@
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
+
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
 
 // Types for Applications
@@ -110,193 +112,164 @@ interface AnalyticsResponse {
   data: AnalyticsStats | TrendData[] | CompanyData[];
 }
 
-// API Client Class
+// API Client Class with humanized methods
 class ApiClient {
-  private baseURL: string;
+  private axiosInstance: AxiosInstance;
 
   constructor(baseURL: string = API_BASE_URL) {
-    this.baseURL = baseURL;
-  }
-
-  private async makeRequest<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    
-    const defaultHeaders = {
-      'Content-Type': 'application/json',
-    };
-
-    // Add authorization header if token exists
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      defaultHeaders['Authorization'] = `Bearer ${token}`;
-    }
-
-    const config: RequestInit = {
-      ...options,
+    this.axiosInstance = axios.create({
+      baseURL,
+      timeout: 10000,
       headers: {
-        ...defaultHeaders,
-        ...options.headers,
+        'Content-Type': 'application/json',
       },
-    };
+    });
 
-    try {
-      const response = await fetch(url, config);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || `HTTP error! status: ${response.status}`);
-      }
-
-      return data;
-    } catch (error) {
-      console.error('API request failed:', error);
-      throw error;
-    }
+    this.setupInterceptors();
   }
 
-  // Application APIs
-  async getApplications(params?: {
+  private setupInterceptors() {
+    // Request interceptor to add auth token
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+
+    // Response interceptor for error handling
+    this.axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          // Handle unauthorized access
+          localStorage.removeItem('authToken');
+          window.location.href = '/login';
+        }
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  // Application Management Methods
+  async fetchAllApplications(params?: {
     page?: number;
     limit?: number;
     status?: string;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
   }): Promise<ApplicationsResponse> {
-    const queryParams = new URLSearchParams();
-    if (params?.page) queryParams.append('page', params.page.toString());
-    if (params?.limit) queryParams.append('limit', params.limit.toString());
-    if (params?.status) queryParams.append('status', params.status);
-    if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
-    if (params?.sortOrder) queryParams.append('sortOrder', params.sortOrder);
-
-    const queryString = queryParams.toString();
-    const endpoint = queryString ? `/applications?${queryString}` : '/applications';
-    
-    return this.makeRequest<ApplicationsResponse>(endpoint);
-  }
-
-  async getApplicationById(id: string): Promise<ApplicationResponse> {
-    return this.makeRequest<ApplicationResponse>(`/applications/${id}`);
-  }
-
-  async createApplication(applicationData: CreateApplicationRequest): Promise<ApplicationResponse> {
-    return this.makeRequest<ApplicationResponse>('/applications', {
-      method: 'POST',
-      body: JSON.stringify(applicationData),
+    const response: AxiosResponse<ApplicationsResponse> = await this.axiosInstance.get('/applications', {
+      params,
     });
+    return response.data;
   }
 
-  async updateApplication(id: string, applicationData: UpdateApplicationRequest): Promise<ApplicationResponse> {
-    return this.makeRequest<ApplicationResponse>(`/applications/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(applicationData),
-    });
+  async fetchApplicationById(id: string): Promise<ApplicationResponse> {
+    const response: AxiosResponse<ApplicationResponse> = await this.axiosInstance.get(`/applications/${id}`);
+    return response.data;
   }
 
-  async deleteApplication(id: string): Promise<{ success: boolean; message: string }> {
-    return this.makeRequest<{ success: boolean; message: string }>(`/applications/${id}`, {
-      method: 'DELETE',
-    });
+  async createNewApplication(applicationData: CreateApplicationRequest): Promise<ApplicationResponse> {
+    const response: AxiosResponse<ApplicationResponse> = await this.axiosInstance.post('/applications', applicationData);
+    return response.data;
+  }
+
+  async updateExistingApplication(id: string, applicationData: UpdateApplicationRequest): Promise<ApplicationResponse> {
+    const response: AxiosResponse<ApplicationResponse> = await this.axiosInstance.put(`/applications/${id}`, applicationData);
+    return response.data;
+  }
+
+  async removeApplication(id: string): Promise<{ success: boolean; message: string }> {
+    const response: AxiosResponse<{ success: boolean; message: string }> = await this.axiosInstance.delete(`/applications/${id}`);
+    return response.data;
   }
 
   async clearAllApplications(): Promise<{ success: boolean; message: string }> {
-    return this.makeRequest<{ success: boolean; message: string }>('/applications', {
-      method: 'DELETE',
-    });
+    const response: AxiosResponse<{ success: boolean; message: string }> = await this.axiosInstance.delete('/applications');
+    return response.data;
   }
 
-  // Get applications for a specific user
-  async getUserApplications(userId: string): Promise<ApplicationsResponse> {
-    return this.makeRequest<ApplicationsResponse>(`/applications/user/${userId}`);
+  // User-specific Methods
+  async fetchUserApplications(userId: string): Promise<ApplicationsResponse> {
+    const response: AxiosResponse<ApplicationsResponse> = await this.axiosInstance.get(`/applications/user/${userId}`);
+    return response.data;
   }
 
-  // Filter applications by status and month
-  async filterApplications(params: {
+  // Filtering and Search Methods
+  async filterApplicationsByCriteria(params: {
     status?: string;
     month?: number;
     year?: number;
     page?: number;
     limit?: number;
   }): Promise<ApplicationsResponse> {
-    const queryParams = new URLSearchParams();
-    if (params.status) queryParams.append('status', params.status);
-    if (params.month) queryParams.append('month', params.month.toString());
-    if (params.year) queryParams.append('year', params.year.toString());
-    if (params.page) queryParams.append('page', params.page.toString());
-    if (params.limit) queryParams.append('limit', params.limit.toString());
-
-    const queryString = queryParams.toString();
-    const endpoint = queryString ? `/applications/filter?${queryString}` : '/applications/filter';
-    
-    return this.makeRequest<ApplicationsResponse>(endpoint);
+    const response: AxiosResponse<ApplicationsResponse> = await this.axiosInstance.get('/applications/filter', {
+      params,
+    });
+    return response.data;
   }
 
-  // Sort applications
-  async sortApplications(params: {
+  async sortApplicationsByField(params: {
     by?: string;
     order?: 'asc' | 'desc';
     page?: number;
     limit?: number;
   }): Promise<ApplicationsResponse> {
-    const queryParams = new URLSearchParams();
-    if (params.by) queryParams.append('by', params.by);
-    if (params.order) queryParams.append('order', params.order);
-    if (params.page) queryParams.append('page', params.page.toString());
-    if (params.limit) queryParams.append('limit', params.limit.toString());
-
-    const queryString = queryParams.toString();
-    const endpoint = queryString ? `/applications/sort?${queryString}` : '/applications/sort';
-    
-    return this.makeRequest<ApplicationsResponse>(endpoint);
+    const response: AxiosResponse<ApplicationsResponse> = await this.axiosInstance.get('/applications/sort', {
+      params,
+    });
+    return response.data;
   }
 
-  // Search applications
-  async searchApplications(params: {
+  async searchApplicationsByKeywords(params: {
     company?: string;
     position?: string;
     location?: string;
     page?: number;
     limit?: number;
   }): Promise<ApplicationsResponse> {
-    const queryParams = new URLSearchParams();
-    if (params.company) queryParams.append('company', params.company);
-    if (params.position) queryParams.append('position', params.position);
-    if (params.location) queryParams.append('location', params.location);
-    if (params.page) queryParams.append('page', params.page.toString());
-    if (params.limit) queryParams.append('limit', params.limit.toString());
-
-    const queryString = queryParams.toString();
-    const endpoint = queryString ? `/applications/search?${queryString}` : '/applications/search';
-    
-    return this.makeRequest<ApplicationsResponse>(endpoint);
+    const response: AxiosResponse<ApplicationsResponse> = await this.axiosInstance.get('/applications/search', {
+      params,
+    });
+    return response.data;
   }
 
-  // Analytics APIs
-  async getAnalyticsTrends(params?: {
+  // Analytics Methods
+  async fetchApplicationTrends(params?: {
     period?: '1month' | '3months' | '6months' | '1year';
   }): Promise<{ success: boolean; data: any }> {
-    const queryParams = new URLSearchParams();
-    if (params?.period) queryParams.append('period', params.period);
-
-    const queryString = queryParams.toString();
-    const endpoint = queryString ? `/analytics/trends?${queryString}` : '/analytics/trends';
-    
-    return this.makeRequest<{ success: boolean; data: any }>(endpoint);
+    const response: AxiosResponse<{ success: boolean; data: any }> = await this.axiosInstance.get('/analytics/trends', {
+      params,
+    });
+    return response.data;
   }
 
-  async getTopCompanies(params?: {
+  async fetchTopCompanies(params?: {
     limit?: number;
   }): Promise<{ success: boolean; data: any }> {
-    const queryParams = new URLSearchParams();
-    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    const response: AxiosResponse<{ success: boolean; data: any }> = await this.axiosInstance.get('/analytics/top-companies', {
+      params,
+    });
+    return response.data;
+  }
 
-    const queryString = queryParams.toString();
-    const endpoint = queryString ? `/analytics/top-companies?${queryString}` : '/analytics/top-companies';
-    
-    return this.makeRequest<{ success: boolean; data: any }>(endpoint);
+  // Utility Methods
+  async getApplicationStats(): Promise<AnalyticsResponse> {
+    const response: AxiosResponse<AnalyticsResponse> = await this.axiosInstance.get('/analytics/stats');
+    return response.data;
+  }
+
+  // Health Check
+  async checkApiHealth(): Promise<{ status: string; timestamp: string }> {
+    const response: AxiosResponse<{ status: string; timestamp: string }> = await this.axiosInstance.get('/health');
+    return response.data;
   }
 }
 
